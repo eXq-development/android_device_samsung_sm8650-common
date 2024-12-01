@@ -97,6 +97,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
 
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
+
 # Doze
 PRODUCT_PACKAGES += \
     SamsungDoze
@@ -157,6 +160,12 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.class_main.sh \
+    init.kernel.post_boot-cliffs.sh \
+    init.kernel.post_boot-pineapple.sh \
+    init.kernel.post_boot.sh \
+    init.qti.kernel.debug-cliffs.sh \
+    init.qti.kernel.debug-pineapple.sh \
+    init.qti.kernel.debug.sh \
     init.mdm.sh \
     init.qcom.early_boot.sh \
     init.qcom.post_boot.sh \
@@ -181,9 +190,16 @@ PRODUCT_PACKAGES += \
     init.samsung.rc
 
 # Keymint
+
+PRODUCT_PACKAGES += \
+    android.hardware.security.keymint-V1-ndk_platform.vendor \
+    android.hardware.security.keymint-V2-ndk.vendor \
+    android.hardware.security.rkp-V3-ndk.vendor \
+    android.hardware.security.sharedsecret-V2-ndk.vendor \
+
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/configs/permissions/android.hardware.hardware_keystore_v200.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.hardware_keystore.xml \
-    $(LOCAL_PATH)/configs/permissions/android.hardware.strongbox_keystore_v4.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.strongbox_keystore.xml
+    $(LOCAL_PATH)/configs/permissions/android.hardware.hardware_keystore.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.hardware_keystore.xml \
+    $(LOCAL_PATH)/configs/permissions/android.hardware.strongbox_keystore.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.strongbox_keystore.xml
 
 # Media
 PRODUCT_PACKAGES += \
@@ -248,7 +264,7 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power-service.lineage-libperfmgr \
+    android.hardware.power-service.pixel-libperfmgr \
     libqti-perfd-client
 
 PRODUCT_COPY_FILES += \
@@ -261,7 +277,10 @@ PRODUCT_PACKAGES += \
 # QTI
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/permissions/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti.xml \
-    $(LOCAL_PATH)/configs/permissions/qti_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml
+    $(LOCAL_PATH)/configs/permissions/privapp-permissions-qti-system-ext.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti-system-ext.xml \
+    $(LOCAL_PATH)/configs/permissions/privapp-permissions-qti-vendor.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti-vendor.xml \
+    $(LOCAL_PATH)/configs/permissions/qti_whitelist.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml \
+    $(LOCAL_PATH)/configs/permissions/qti_whitelist_system_ext.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/sysconfig/qti_whitelist.xml \
 
 # RIL
 PRODUCT_PACKAGES += \

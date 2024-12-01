@@ -149,3 +149,46 @@ sh_binary {
     src: "init.qcom.sh",
     vendor: true,
 }
+
+sh_binary {
+    name: "init.kernel.post_boot-cliffs.sh",
+    src: "init.kernel.post_boot-cliffs.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.kernel.post_boot-pineapple.sh",
+    src: "init.kernel.post_boot-pineapple.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.kernel.post_boot.sh",
+    src: "init.kernel.post_boot.sh",
+    vendor: true,
+}
+
+
+sh_binary {
+    name: "init.qti.kernel.debug-cliffs.sh",
+    src: "init.qti.kernel.debug-cliffs.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.kernel.debug-pineapple.sh",
+    src: "init.qti.kernel.debug-pineapple.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.kernel.debug.sh",
+    src: "init.qti.kernel.debug.sh",
+    vendor: true,
+}
+
+sh_binary {
+    name: "init.qti.kernel.early_debug-pineapple.sh",
+    src: "init.qti.kernel.early_debug-pineapple.sh",
+    vendor: true,
+}

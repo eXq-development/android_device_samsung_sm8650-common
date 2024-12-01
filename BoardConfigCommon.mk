@@ -6,17 +6,22 @@
 
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
-LOCAL_CHECK_ELF_FILES := false
+#BUILD_BROKEN_INCORRECT_PARTITION_IMAGES := true
 
 COMMON_PATH := device/samsung/sm8650-common
+
+# A/B
+AB_OTA_UPDATER := false
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv9-a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := generic
 TARGET_CPU_VARIANT_RUNTIME := kryo300
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := e3q
 
 # Audio
 AUDIO_FEATURE_ENABLED_DLKM := true
@@ -36,6 +41,9 @@ BOARD_USES_ALSA_AUDIO := true
 TARGET_PROVIDES_AUDIO_HAL := true
 TARGET_USES_QCOM_MM_AUDIO := true
 
+# Board
+TARGET_BOARD_INFO_FILE := $(COMMON_PATH)/board-info.txt
+
 # Boot
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
@@ -44,6 +52,10 @@ BOARD_RAMDISK_USE_LZ4 := true
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := pineapple
 
+# Display
+TARGET_SCREEN_DENSITY := 600
+TARGET_GRALLOC_HANDLE_HAS_UBWCP_FORMAT = true
+
 # DTB / DTBO
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
@@ -51,20 +63,6 @@ TARGET_NEEDS_DTBOIMAGE := true
 
 # Filesystem
 TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/configs/config.fs
-
-# HIDL
-DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
-    $(COMMON_PATH)/vintf/device_framework_matrix.xml \
-    hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml
-
-DEVICE_MANIFEST_FILE := \
-    $(COMMON_PATH)/vintf/manifest_pineapple.xml \
-    $(COMMON_PATH)/vintf/manifest_samsung.xml \
-    $(COMMON_PATH)/vintf/radio_manifest.xml \
-    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
-    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
-
-DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
 
 # Init Boot
 BOARD_INIT_BOOT_HEADER_VERSION := 4
@@ -107,27 +105,74 @@ TARGET_KERNEL_CONFIG := \
     vendor/pineapple_GKI.config \
     oem/e3q-lego.config
 
+# Kernel modules
+BOARD_SYSTEM_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.system_dlkm))
+BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(COMMON_PATH)/modules.blocklist
+BOARD_VENDOR_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load))
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE)
+BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.vendor_boot))
+BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.recovery))
+BOOT_KERNEL_MODULES := $(strip $(shell cat $(COMMON_PATH)/modules.load.recovery $(COMMON_PATH)/modules.include.vendor_ramdisk))
+SYSTEM_KERNEL_MODULES := $(strip $(shell cat $(COMMON_PATH)/modules.include.system_dlkm))
+BOARD_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.recovery))
+BOARD_RECOVERY_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(COMMON_PATH)/modules.load.recovery))
+RECOVERY_KERNEL_MODULES := $(BOARD_RECOVERY_RAMDISK_KERNEL_MODULES_LOAD)
+
+TARGET_KERNEL_EXT_MODULE_ROOT := kernel/samsung/sm8650-modules
+TARGET_KERNEL_EXT_MODULES := \
+    qcom/opensource/mmrm-driver \
+    qcom/opensource/mm-drivers/hw_fence \
+    qcom/opensource/mm-drivers/msm_ext_display \
+    qcom/opensource/mm-drivers/sync_fence \
+    qcom/opensource/securemsm-kernel \
+    qcom/opensource/audio-kernel \
+    qcom/opensource/camera-kernel \
+    qcom/opensource/dataipa/drivers/platform/msm \
+    qcom/opensource/datarmnet-ext/mem \
+    qcom/opensource/datarmnet/core \
+    qcom/opensource/datarmnet-ext/aps \
+    qcom/opensource/datarmnet-ext/offload \
+    qcom/opensource/datarmnet-ext/shs \
+    qcom/opensource/datarmnet-ext/perf \
+    qcom/opensource/datarmnet-ext/perf_tether \
+    qcom/opensource/datarmnet-ext/sch \
+    qcom/opensource/datarmnet-ext/wlan \
+    qcom/opensource/display-drivers/msm \
+    qcom/opensource/synx-kernel \
+    qcom/opensource/dsp-kernel \
+    qcom/opensource/eva-kernel \
+    qcom/opensource/video-driver \
+    qcom/opensource/graphics-kernel \
+    qcom/opensource/wlan/platform \
+    qcom/opensource/wlan/qcacld-3.0 \
+    qcom/opensource/bt-kernel \
+    qcom/opensource/spu-kernel \
+    qcom/opensource/mm-sys-kernel/ubwcp \
+    qcom/opensource/touch-drivers \
+    nxp/opensource/driver
 
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
 
 # Partitions
--include vendor/lineage/config/BoardConfigReservedSize.mk
-BOARD_PRODUCTIMAGE_MINIMAL_PARTITION_RESERVED_SIZE := false
-
+BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_BOOTIMAGE_PARTITION_SIZE := 100663296
-BOARD_CACHEIMAGE_PARTITION_SIZE := 629145600
+BOARD_CACHEIMAGE_PARTITION_SIZE := 367001600
 BOARD_DTBOIMG_PARTITION_SIZE := 16777216
 BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 109051904
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 110034944
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 100663296
-
-BOARD_SUPER_PARTITION_SIZE := 12664700928
+BOARD_SUPER_PARTITION_SIZE := 14105444352
 BOARD_SUPER_PARTITION_GROUPS := samsung_dynamic_partitions
-BOARD_SAMSUNG_DYNAMIC_PARTITIONS_PARTITION_LIST := odm product system system_dlkm system_ext vendor vendor_dlkm
-BOARD_SAMSUNG_DYNAMIC_PARTITIONS_SIZE := 12660506624
-
-BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
+BOARD_SAMSUNG_DYNAMIC_PARTITIONS_PARTITION_LIST := \
+    odm \
+    product \
+    system \
+    system_dlkm \
+    system_ext \
+    vendor \
+    vendor_dlkm
+BOARD_SAMSUNG_DYNAMIC_PARTITIONS_SIZE := 14101250048 # (BOARD_SUPER_PARTITION_SIZE - 4MiB)
 
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_ODMIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -154,33 +199,31 @@ BOARD_USES_QCOM_HARDWARE := true
 TARGET_BOARD_PLATFORM := pineapple
 
 # Properties
+TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor.prop
 TARGET_PRODUCT_PROP += $(COMMON_PATH)/product.prop
 TARGET_SYSTEM_EXT_PROP += $(COMMON_PATH)/system_ext.prop
+TARGET_SYSTEM_DLKM_PROP += $(COMMON_PATH)/system_dlkm.prop
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
+TARGET_ODM_DLKM_PROP += $(COMMON_PATH)/odm_dlkm.prop
+TARGET_VENDOR_DLKM_PROP += $(COMMON_PATH)/vendor_dlkm.prop
 
 # Recovery
+TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/init/fstab.qcom
 BOARD_HAS_DOWNLOAD_MODE := true
 BOARD_INCLUDE_RECOVERY_DTBO := true
-BOARD_RECOVERY_MKBOOTIMG_ARGS := --header_version 2
 BOARD_USES_FULL_RECOVERY_IMAGE := true
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/recovery/root/fstab.qcom
+BOARD_RECOVERY_MKBOOTIMG_ARGS := --header_version 2
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
-TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 
 # Releasetools
-TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)/releasetools
+TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
 
-# RIL
-ENABLE_VENDOR_RIL_SERVICE := true
-
-# Security
-BOOT_SECURITY_PATCH := 2024-11-01
-VENDOR_SECURITY_PATCH := $(BOOT_SECURITY_PATCH)
+# Security patch level
+VENDOR_SECURITY_PATCH := 2024-10-01
 
 # SEPolicy
-include device/lineage/sepolicy/libperfmgr/sepolicy.mk
 include device/qcom/sepolicy_vndr/SEPolicy.mk
 
 # Verified Boot
@@ -210,18 +253,27 @@ BOARD_AVB_VENDOR_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 BOARD_AVB_VENDOR_DLKM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 BOARD_AVB_ODM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
 
-# Vibrator
-#$(call soong_config_set,samsungVibratorVars,duration_amplitude,true)
+# VINTF
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
+    $(COMMON_PATH)/vintf/device_framework_matrix.xml \
+    hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml
 
-# WiFi
+DEVICE_MANIFEST_FILE := \
+    $(COMMON_PATH)/vintf/manifest_pineapple.xml \
+    $(COMMON_PATH)/vintf/manifest_samsung.xml \
+    $(COMMON_PATH)/vintf/radio_manifest.xml \
+    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
+    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
+
+# Wi-Fi
 BOARD_WLAN_DEVICE := qcwcn
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_WPA_SUPPLICANT_DRIVER := $(BOARD_HOSTAPD_DRIVER)
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := $(BOARD_HOSTAPD_PRIVATE_LIB)
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB_EVENT := "ON"
-CONFIG_ACS := true
 CONFIG_IEEE80211AX := true
+WIFI_DRIVER_DEFAULT := qca_cld3
 WIFI_DRIVER_STATE_CTRL_PARAM := "/dev/wlan"
 WIFI_DRIVER_STATE_OFF := "OFF"
 WIFI_DRIVER_STATE_ON := "ON"
@@ -229,5 +281,5 @@ WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
-# Include the proprietary files BoardConfig.
-include vendor/samsung/sm8650-common/BoardConfigVendor.mk
+# Inherit the proprietary files
+include vendor/samsung/e3q/BoardConfigVendor.mk
