@@ -90,7 +90,7 @@ function blob_fixup() {
             [ "$2" = "" ] && return 0
             sed -i 's/default0/software/g' "${2}"
             ;;
-        vendor/etc/media_codecs_kalama.xml|vendor/etc/media_codecs_kalama_vendor.xml)
+        vendor/etc/media_codecs_pineapple.xml|vendor/etc/media_codecs_pineapple_vendor.xml)
             [ "$2" = "" ] && return 0
             sed -Ei "/media_codecs_(google_audio|google_c2|google_telephony|google_video|vendor_audio)/d" "${2}"
             ;;

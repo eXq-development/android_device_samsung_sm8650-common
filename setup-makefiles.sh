@@ -24,14 +24,14 @@ source "${HELPER}"
 
 function vendor_imports() {
     cat <<EOF >>"$1"
-		"device/samsung/sm8550-common",
-		"hardware/qcom-caf/sm8550",
+		"device/samsung/sm8650-common",
+		"hardware/qcom-caf/sm8650",
 		"hardware/qcom-caf/wlan",
 		"hardware/samsung",
 		"vendor/qcom/opensource/commonsys/display",
 		"vendor/qcom/opensource/commonsys-intf/display",
 		"vendor/qcom/opensource/dataservices",
-		"vendor/samsung/sm8550-common",
+		"vendor/samsung/sm8650-common",
 EOF
 }
 
@@ -65,7 +65,7 @@ function lib_to_package_fixup() {
 setup_vendor "${DEVICE_COMMON}" "${VENDOR_COMMON:-$VENDOR}" "${ANDROID_ROOT}" true
 
 # Warning headers and guards
-write_headers "dm1q dm2q dm3q"
+write_headers "e3q"
 
 # The standard common blobs
 write_makefiles "${MY_DIR}/proprietary-files.txt"

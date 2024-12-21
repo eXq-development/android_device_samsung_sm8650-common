@@ -1,12 +1,12 @@
 #
-# Copyright (C) 2023 The LineageOS Project
+# Copyright (C) 2024 The LineageOS Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 BUILD_BROKEN_DUP_RULES := true
 
-COMMON_PATH := device/samsung/sm8550-common
+COMMON_PATH := device/samsung/sm8650-common
 
 # Architecture
 TARGET_ARCH := arm64
@@ -42,7 +42,7 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := kalama
+TARGET_BOOTLOADER_BOARD_NAME := pineapple
 
 # DTB / DTBO
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
@@ -58,11 +58,11 @@ DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := \
     hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml
 
 DEVICE_MANIFEST_FILE := \
-    $(COMMON_PATH)/vintf/manifest_kalama.xml \
+    $(COMMON_PATH)/vintf/manifest_pineapple.xml \
     $(COMMON_PATH)/vintf/manifest_samsung.xml \
     $(COMMON_PATH)/vintf/radio_manifest.xml \
-    hardware/qcom-caf/sm8550/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
-    hardware/qcom-caf/sm8550/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
+    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa.xml \
+    hardware/qcom-caf/sm8650/audio/primary-hal/configs/common/manifest_non_qmaa_extn.xml
 
 DEVICE_MATRIX_FILE := hardware/qcom-caf/common/compatibility_matrix.xml
 
@@ -89,10 +89,10 @@ BOARD_KERNEL_IMAGE_NAME := Image
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 
-TARGET_KERNEL_SOURCE := kernel/samsung/sm8550
+TARGET_KERNEL_SOURCE := kernel/samsung/sm8650
 
 # Kernel modules
-TARGET_KERNEL_EXT_MODULE_ROOT := kernel/samsung/sm8550-modules
+TARGET_KERNEL_EXT_MODULE_ROOT := kernel/samsung/sm8650-modules
 
 # Metadata
 BOARD_USES_METADATA_PARTITION := true
@@ -137,7 +137,7 @@ BOARD_ROOT_EXTRA_FOLDERS := \
 # Platform
 BOARD_VENDOR := samsung
 BOARD_USES_QCOM_HARDWARE := true
-TARGET_BOARD_PLATFORM := kalama
+TARGET_BOARD_PLATFORM := pineapple
 
 # Properties
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor.prop
@@ -220,4 +220,4 @@ WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # Include the proprietary files BoardConfig.
-include vendor/samsung/sm8550-common/BoardConfigVendor.mk
+include vendor/samsung/sm8650-common/BoardConfigVendor.mk
