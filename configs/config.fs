@@ -46,9 +46,6 @@ value:2915
 [AID_VENDOR_THALES_WEAVER]
 value:2916
 
-[AID_VENDOR_THALES_WEAVER]
-value:2914
-
 [vendor/bin/hw/android.hardware.security.keymint-service.strongbox-thales]
 mode: 0755
 user: AID_VENDOR_THALES_STRONGBOX

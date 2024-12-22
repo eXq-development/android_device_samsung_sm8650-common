@@ -125,4 +125,3 @@ on property:sys.dexopt.ctrl=true
 
 on property:sys.dexopt.ctrl=false
     setprop dalvik.vm.dex2oat-cpu-set ""
-    set_dex2oat_threads ctrl
